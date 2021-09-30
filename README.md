@@ -36,3 +36,9 @@ After running the application you can access the documentation by following url:
 http://localhost:8080/swagger-ui/index.html
 
 * http://localhost:8080 is the default endpoint
+
+
+## Note:
+
+* I didn't consider foriegn keys and model relationships just for simplicity
+* Meybe it was better to use postgres uuid function
