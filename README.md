@@ -39,9 +39,14 @@ http://localhost:8080/swagger-ui/index.html
 
 
 ## Note:
-
 * I didn't consider foriegn keys and model relationships just for simplicity
+
 * Meybe it was better to use postgres uuid function
+
 * Because of the limitation of exchange rate api, I just call the api for USD to EUR
+
 * It's better to implement exchange rate service provider more modular
+
 * It's better to set exchange rate api access key as a ENV variable
+
+* Because problems after creating jar file to access swagger endpoint, I use ```./mvnw spring-boot:run``` in docker file
