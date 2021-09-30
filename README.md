@@ -49,4 +49,4 @@ http://localhost:8080/swagger-ui/index.html
 
 * It's better to set exchange rate api access key as a ENV variable
 
-* Because problems after creating jar file to access swagger endpoint, I use ```./mvnw spring-boot:run``` in docker file
+* Because of problems after creating jar file to access swagger endpoint, I use ```./mvnw spring-boot:run``` in docker file
