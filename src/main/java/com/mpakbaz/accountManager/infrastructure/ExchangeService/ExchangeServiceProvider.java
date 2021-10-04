@@ -21,7 +21,7 @@ public class ExchangeServiceProvider {
     }
 
     public double getEURUSDRate() {
-        // because of the exchange rate api limitation just return a static value
-        return 1.17;
+        double usdToEur = this.getUSDEURRate();
+        return 1 / usdToEur;
     }
 }
