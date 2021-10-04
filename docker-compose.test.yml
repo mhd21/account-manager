@@ -1,0 +1,27 @@
+version: '3.8'
+
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    container_name: app
+    depends_on:
+      - db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/account-manager-test
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=password
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.PostgreSQLDialect
+      - SPRING_JPA_PROPERTIES_HIBERNATE_ENABLE_LAZY_LOAD_NO_TRANS=true
+
+  db:
+    image: 'postgres:13.1-alpine'
+    container_name: db_test
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=account-manager-test
+    

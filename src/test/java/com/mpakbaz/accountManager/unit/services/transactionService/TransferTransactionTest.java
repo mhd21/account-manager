@@ -13,6 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import com.mpakbaz.accountManager.Services.TransactionService;
@@ -55,13 +56,22 @@ public class TransferTransactionTest {
     public void transfer_will_throw_account_balance_exception_if_from_account_balance_is_less_than_transaction_amount() {
 
         BigDecimal amount = BigDecimal.valueOf(20);
-        UUID fromAccountId = UUID.randomUUID();
-        UUID toAccountId = UUID.randomUUID();
+        Account fromAccount = new Account();
+        fromAccount.setCurrency(Currencies.USD);
 
-        when(transactionDetailRepository.accountBalance(fromAccountId)).thenReturn(BigDecimal.valueOf(10));
+        Account toAccount = new Account();
+        toAccount.setCurrency(Currencies.EUR);
+
+        when(transactionDetailRepository.accountBalance(fromAccount.getId())).thenReturn(BigDecimal.valueOf(20));
+        Optional<Account> fromAccountOptional = Optional.of(fromAccount);
+        when(accountRepository.findById(fromAccount.getId())).thenReturn(fromAccountOptional);
+        Optional<Account> toAccountOptional = Optional.of(toAccount);
+        when(accountRepository.findById(toAccount.getId())).thenReturn(toAccountOptional);
+
+        when(transactionDetailRepository.accountBalance(fromAccount.getId())).thenReturn(BigDecimal.valueOf(10));
 
         assertThrows(AccountBalanceException.class,
-                () -> transactionService.transferTransaction(fromAccountId, toAccountId, amount));
+                () -> transactionService.transferTransaction(fromAccount.getId(), toAccount.getId(), amount));
 
     }
 
@@ -77,8 +87,10 @@ public class TransferTransactionTest {
         toAccount.setCurrency(Currencies.EUR);
 
         when(transactionDetailRepository.accountBalance(fromAccount.getId())).thenReturn(BigDecimal.valueOf(20));
-        when(accountRepository.getById(fromAccount.getId())).thenReturn(fromAccount);
-        when(accountRepository.getById(toAccount.getId())).thenReturn(toAccount);
+        Optional<Account> fromAccountOptional = Optional.of(fromAccount);
+        when(accountRepository.findById(fromAccount.getId())).thenReturn(fromAccountOptional);
+        Optional<Account> toAccountOptional = Optional.of(toAccount);
+        when(accountRepository.findById(toAccount.getId())).thenReturn(toAccountOptional);
 
         when(expchageServiceProvider.getUSDEURRate()).thenReturn(0.8);
 
@@ -99,8 +111,10 @@ public class TransferTransactionTest {
         toAccount.setCurrency(Currencies.USD);
 
         when(transactionDetailRepository.accountBalance(fromAccount.getId())).thenReturn(BigDecimal.valueOf(20));
-        when(accountRepository.getById(fromAccount.getId())).thenReturn(fromAccount);
-        when(accountRepository.getById(toAccount.getId())).thenReturn(toAccount);
+        Optional<Account> fromAccountOptional = Optional.of(fromAccount);
+        when(accountRepository.findById(fromAccount.getId())).thenReturn(fromAccountOptional);
+        Optional<Account> toAccountOptional = Optional.of(toAccount);
+        when(accountRepository.findById(toAccount.getId())).thenReturn(toAccountOptional);
 
         when(expchageServiceProvider.getEURUSDRate()).thenReturn(1.7);
 
@@ -120,8 +134,10 @@ public class TransferTransactionTest {
         toAccount.setCurrency(Currencies.USD);
 
         when(transactionDetailRepository.accountBalance(fromAccount.getId())).thenReturn(BigDecimal.valueOf(20));
-        when(accountRepository.getById(fromAccount.getId())).thenReturn(fromAccount);
-        when(accountRepository.getById(toAccount.getId())).thenReturn(toAccount);
+        Optional<Account> fromAccountOptional = Optional.of(fromAccount);
+        when(accountRepository.findById(fromAccount.getId())).thenReturn(fromAccountOptional);
+        Optional<Account> toAccountOptional = Optional.of(toAccount);
+        when(accountRepository.findById(toAccount.getId())).thenReturn(toAccountOptional);
 
         ArgumentCaptor<Transaction> argument = ArgumentCaptor.forClass(Transaction.class);
         transactionService.transferTransaction(fromAccount.getId(), toAccount.getId(), amount);
@@ -142,8 +158,10 @@ public class TransferTransactionTest {
         toAccount.setCurrency(Currencies.USD);
 
         when(transactionDetailRepository.accountBalance(fromAccount.getId())).thenReturn(BigDecimal.valueOf(20));
-        when(accountRepository.getById(fromAccount.getId())).thenReturn(fromAccount);
-        when(accountRepository.getById(toAccount.getId())).thenReturn(toAccount);
+        Optional<Account> fromAccountOptional = Optional.of(fromAccount);
+        when(accountRepository.findById(fromAccount.getId())).thenReturn(fromAccountOptional);
+        Optional<Account> toAccountOptional = Optional.of(toAccount);
+        when(accountRepository.findById(toAccount.getId())).thenReturn(toAccountOptional);
 
         ArgumentCaptor<TransactionDetail> argument = ArgumentCaptor.forClass(TransactionDetail.class);
         transactionService.transferTransaction(fromAccount.getId(), toAccount.getId(), amount);
@@ -167,8 +185,11 @@ public class TransferTransactionTest {
         toAccount.setCurrency(Currencies.USD);
 
         when(transactionDetailRepository.accountBalance(fromAccount.getId())).thenReturn(BigDecimal.valueOf(20));
-        when(accountRepository.getById(fromAccount.getId())).thenReturn(fromAccount);
-        when(accountRepository.getById(toAccount.getId())).thenReturn(toAccount);
+        Optional<Account> fromAccountOptional = Optional.of(fromAccount);
+        when(accountRepository.findById(fromAccount.getId())).thenReturn(fromAccountOptional);
+        Optional<Account> toAccountOptional = Optional.of(toAccount);
+        when(accountRepository.findById(toAccount.getId())).thenReturn(toAccountOptional);
+        when(accountRepository.findById(toAccount.getId())).thenReturn(toAccountOptional);
 
         ArgumentCaptor<TransactionDetail> argument = ArgumentCaptor.forClass(TransactionDetail.class);
         transactionService.transferTransaction(fromAccount.getId(), toAccount.getId(), amount);
@@ -194,8 +215,11 @@ public class TransferTransactionTest {
         toAccount.setCurrency(Currencies.EUR);
 
         when(transactionDetailRepository.accountBalance(fromAccount.getId())).thenReturn(BigDecimal.valueOf(20));
-        when(accountRepository.getById(fromAccount.getId())).thenReturn(fromAccount);
-        when(accountRepository.getById(toAccount.getId())).thenReturn(toAccount);
+        Optional<Account> fromAccountOptional = Optional.of(fromAccount);
+        when(accountRepository.findById(fromAccount.getId())).thenReturn(fromAccountOptional);
+        Optional<Account> toAccountOptional = Optional.of(toAccount);
+        when(accountRepository.findById(toAccount.getId())).thenReturn(toAccountOptional);
+        when(accountRepository.findById(toAccount.getId())).thenReturn(toAccountOptional);
 
         double exchangeRate = 0.8;
         when(expchageServiceProvider.getUSDEURRate()).thenReturn(exchangeRate);

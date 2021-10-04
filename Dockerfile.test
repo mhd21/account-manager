@@ -1,0 +1,11 @@
+FROM openjdk:17-jdk-alpine
+
+WORKDIR /usr/src/app
+
+COPY . .
+
+RUN ./mvnw install -DskipTests
+
+
+ENTRYPOINT ["./mvnw","test"]
+

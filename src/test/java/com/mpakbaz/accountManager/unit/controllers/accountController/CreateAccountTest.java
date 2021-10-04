@@ -75,8 +75,8 @@ public class CreateAccountTest {
                                 .thenReturn(account);
 
                 this.mockMvc.perform(post("/account/create").contentType(APPLICATION_JSON)
-                                .content(String.format("{\"customerId\":\"%s\",\"currency\": \"%s\"}",
-                                                customer.getId().toString(), Currencies.USD)))
+                                .content(String.format("{\"name\":\"%s\",\"customerId\":\"%s\",\"currency\": \"%s\"}",
+                                                "Mehdi Account", customer.getId().toString(), Currencies.USD)))
                                 .andDo(print()).andExpect(status().isOk())
                                 .andExpect(jsonPath("id", is(account.getId().toString())))
                                 .andExpect(jsonPath("customerId", is(customer.getId().toString())))
@@ -97,9 +97,11 @@ public class CreateAccountTest {
                 when(accountService.createAccount(isA(UUID.class), isA(Account.class), isA(BigDecimal.class)))
                                 .thenReturn(account);
 
-                this.mockMvc.perform(post("/account/create").contentType(APPLICATION_JSON)
-                                .content(String.format("{\"currency\": \"%s\"}", Currencies.USD))).andDo(print())
-                                .andExpect(status().isBadRequest());
+                this.mockMvc.perform(
+                                post("/account/create").contentType(APPLICATION_JSON)
+                                                .content(String.format("{\"name\":\"%s\",\"currency\": \"%s\"}",
+                                                                "Mehdi Account", Currencies.USD)))
+                                .andDo(print()).andExpect(status().isBadRequest());
 
         }
 
@@ -115,10 +117,9 @@ public class CreateAccountTest {
                 when(accountService.createAccount(isA(UUID.class), isA(Account.class), isA(BigDecimal.class)))
                                 .thenReturn(account);
 
-                this.mockMvc.perform(
-                                post("/account/create").contentType(APPLICATION_JSON)
-                                                .content(String.format("{\"customerId\":\"%s\",\"currency\": \"%s\"}",
-                                                                "id-uuid-test", Currencies.USD)))
+                this.mockMvc.perform(post("/account/create").contentType(APPLICATION_JSON)
+                                .content(String.format("{\"name\":\"%s\",\"customerId\":\"%s\",\"currency\": \"%s\"}",
+                                                "Mehdi Account", "id-uuid-test", Currencies.USD)))
                                 .andDo(print()).andExpect(status().isBadRequest());
 
         }
