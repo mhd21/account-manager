@@ -55,4 +55,28 @@ public class AccountService {
         return account;
     }
 
+    public Account updateAccount(Account account) throws AccountNotFoundException {
+        Optional<Account> accountOptional = this.accountRepository.findById(account.getId());
+
+        if (!accountOptional.isPresent()) {
+            throw new AccountNotFoundException("account with id " + account.getId() + " does not exist");
+        }
+
+        Account updatedAccount = accountOptional.get();
+        updatedAccount.setName(account.getName());
+        this.accountRepository.save(updatedAccount);
+
+        return this.getAccount(updatedAccount.getId());
+    }
+
+    public void deleteAccount(UUID accountId) throws AccountNotFoundException {
+        Optional<Account> accountOptional = this.accountRepository.findById(accountId);
+
+        if (!accountOptional.isPresent()) {
+            throw new AccountNotFoundException("account with id " + accountId + " does not exist");
+        }
+
+        this.accountRepository.delete(accountOptional.get());
+    }
+
 }

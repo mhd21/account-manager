@@ -9,12 +9,15 @@ public class AccountPayload {
 
     private UUID customerId;
 
+    private String name;
+
     private String currency;
 
     private BigDecimal balance;
 
     public AccountPayload(com.mpakbaz.accountManager.infrastructure.database.models.Account account) {
         this.id = account.getId();
+        this.name = account.getName();
         this.currency = account.getCurrency();
         this.customerId = account.getCustomer().getId();
         this.balance = account.getBalance();
@@ -26,6 +29,10 @@ public class AccountPayload {
 
     public UUID getCustomerId() {
         return customerId;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public String getCurrency() {

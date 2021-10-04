@@ -9,6 +9,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -22,6 +23,9 @@ public class Account extends EntityWithUUID {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Customer customer;
 
+    @Column(name = "name")
+    private String name;
+
     @Column(name = "currency")
     private String currency;
 
@@ -30,6 +34,18 @@ public class Account extends EntityWithUUID {
 
     public Account() {
         super();
+    }
+
+    public Account(UUID id) {
+        this.setId(id);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Customer getCustomer() {

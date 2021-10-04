@@ -6,6 +6,7 @@ import java.util.UUID;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import com.mpakbaz.accountManager.http.validators.Currency;
 
@@ -21,6 +22,14 @@ public class CreateAccountInput {
     @Min(0)
     @NotNull
     private BigDecimal openningBalance = BigDecimal.ZERO;
+
+    @NotEmpty
+    @Size(min = 4, max = 255)
+    private String name;
+
+    public String getName() {
+        return this.name;
+    }
 
     public UUID getCustomerId() {
         return UUID.fromString(this.customerId);
