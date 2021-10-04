@@ -135,4 +135,8 @@ public class TransactionService {
 
     }
 
+    public BigDecimal getAccountBalance(UUID accountId) {
+        return this.transactionDetailRepository.accountBalance(accountId);
+    }
+
 }

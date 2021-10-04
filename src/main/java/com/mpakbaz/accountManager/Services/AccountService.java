@@ -30,11 +30,14 @@ public class AccountService {
         Account createdAccount = this.createAccount(account);
         this.transactionService.depositTransaction(createdAccount.getId(), openningBalance);
 
-        return createdAccount;
+        return this.getAccount(createdAccount.getId());
     }
 
     public Account getAccount(UUID accountId) {
-        return accountRepository.getById(accountId);
+        Account account = this.accountRepository.getById(accountId);
+        BigDecimal balance = this.transactionService.getAccountBalance(accountId);
+        account.setBalance(balance);
+        return account;
     }
 
 }
