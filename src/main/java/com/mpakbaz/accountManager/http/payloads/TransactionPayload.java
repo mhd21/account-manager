@@ -20,7 +20,7 @@ public class TransactionPayload {
 
     public TransactionPayload(Transaction transaction) {
         this.id = transaction.getId();
-        this.accountId = transaction.getAccountId();
+        this.accountId = transaction.getAccount().getId();
         this.amount = transaction.getAmount();
         this.createdAt = transaction.getCreatedAt();
         this.type = transaction.getType();

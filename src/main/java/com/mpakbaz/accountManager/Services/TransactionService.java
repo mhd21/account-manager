@@ -2,11 +2,13 @@ package com.mpakbaz.accountManager.Services;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Optional;
 import java.util.UUID;
 
 import com.mpakbaz.accountManager.constants.Currencies;
 import com.mpakbaz.accountManager.constants.TransactionType;
 import com.mpakbaz.accountManager.exceptions.AccountBalanceException;
+import com.mpakbaz.accountManager.exceptions.AccountNotFoundException;
 import com.mpakbaz.accountManager.infrastructure.ExchangeService.ExchangeServiceProvider;
 import com.mpakbaz.accountManager.infrastructure.database.models.Account;
 import com.mpakbaz.accountManager.infrastructure.database.models.Transaction;
@@ -40,17 +42,23 @@ public class TransactionService {
         this.expchageServiceProvider = expchageServiceProvider;
     }
 
-    public Transaction depositTransaction(UUID accountId, BigDecimal amount) {
+    public Transaction depositTransaction(UUID accountId, BigDecimal amount) throws AccountNotFoundException {
+        Optional<Account> accountOptional = this.accountRepository.findById(accountId);
 
+        if (!accountOptional.isPresent()) {
+            throw new AccountNotFoundException("from account with id " + accountId + " does not exist");
+        }
+
+        Account account = accountOptional.get();
         Transaction transaction = new Transaction();
-        transaction.setAccountId(accountId);
+        transaction.setAccount(account);
         transaction.setAmount(amount);
         transaction.setType(TransactionType.DEPOSIT);
         transaction.setCreatedAt(new Date(System.currentTimeMillis()));
 
         TransactionDetail transactionDetail = new TransactionDetail();
-        transactionDetail.setTransactionId(transaction.getId());
-        transactionDetail.setAccountId(accountId);
+        transactionDetail.setTransaction(transaction);
+        transactionDetail.setAccount(account);
 
         // use abs to ensure that amount is positive
         transactionDetail.setAmount(amount.abs());
@@ -62,17 +70,24 @@ public class TransactionService {
 
     }
 
-    public Transaction withdrawTransaction(UUID accountId, BigDecimal amount) {
+    public Transaction withdrawTransaction(UUID accountId, BigDecimal amount) throws AccountNotFoundException {
 
+        Optional<Account> accountOptional = this.accountRepository.findById(accountId);
+
+        if (!accountOptional.isPresent()) {
+            throw new AccountNotFoundException("from account with id " + accountId + " does not exist");
+        }
+
+        Account account = accountOptional.get();
         Transaction transaction = new Transaction();
-        transaction.setAccountId(accountId);
+        transaction.setAccount(account);
         transaction.setAmount(amount);
         transaction.setType(TransactionType.WITHDRAWY);
         transaction.setCreatedAt(new Date(System.currentTimeMillis()));
 
         TransactionDetail transactionDetail = new TransactionDetail();
-        transactionDetail.setTransactionId(transaction.getId());
-        transactionDetail.setAccountId(accountId);
+        transactionDetail.setTransaction(transaction);
+        transactionDetail.setAccount(account);
         transactionDetail.setAmount(amount.negate());
 
         Transaction savedTransaction = this.transactionRepository.save(transaction);
@@ -83,16 +98,28 @@ public class TransactionService {
     }
 
     public Transaction transferTransaction(UUID fromAccountId, UUID toAccountId, BigDecimal amount)
-            throws AccountBalanceException {
+            throws AccountBalanceException, AccountNotFoundException {
 
-        BigDecimal fromAccountBalanace = this.transactionDetailRepository.accountBalance(fromAccountId);
+        Optional<Account> fromAccountOptional = this.accountRepository.findById(fromAccountId);
+
+        if (!fromAccountOptional.isPresent()) {
+            throw new AccountNotFoundException("from account with id " + fromAccountId + " does not exist");
+        }
+
+        Optional<Account> toAccountOptional = this.accountRepository.findById(toAccountId);
+
+        if (!toAccountOptional.isPresent()) {
+            throw new AccountNotFoundException("from account with id " + toAccountId + " does not exist");
+        }
+
+        Account fromAccount = fromAccountOptional.get();
+        Account toAccount = toAccountOptional.get();
+
+        BigDecimal fromAccountBalanace = this.transactionDetailRepository.accountBalance(fromAccount.getId());
 
         if (fromAccountBalanace.compareTo(amount) < 0) {
             throw new AccountBalanceException("account balance is less than " + amount);
         }
-
-        Account fromAccount = this.accountRepository.getById(fromAccountId);
-        Account toAccount = this.accountRepository.getById(toAccountId);
 
         BigDecimal fromAmount = amount.negate();
         BigDecimal toAmount = amount.abs();
@@ -110,19 +137,19 @@ public class TransactionService {
         }
 
         Transaction transaction = new Transaction();
-        transaction.setAccountId(fromAccountId);
+        transaction.setAccount(fromAccount);
         transaction.setAmount(amount);
         transaction.setType(TransactionType.TRANSFER);
         transaction.setCreatedAt(new Date(System.currentTimeMillis()));
 
         TransactionDetail fromAccountTransactionDetail = new TransactionDetail();
-        fromAccountTransactionDetail.setTransactionId(transaction.getId());
-        fromAccountTransactionDetail.setAccountId(fromAccountId);
+        fromAccountTransactionDetail.setTransaction(transaction);
+        fromAccountTransactionDetail.setAccount(fromAccount);
         fromAccountTransactionDetail.setAmount(fromAmount);
 
         TransactionDetail toAccountTransactionDetail = new TransactionDetail();
-        toAccountTransactionDetail.setTransactionId(transaction.getId());
-        toAccountTransactionDetail.setAccountId(toAccountId);
+        toAccountTransactionDetail.setTransaction(transaction);
+        toAccountTransactionDetail.setAccount(toAccount);
 
         // use abs to ensure that amount is positive for toAccount
         toAccountTransactionDetail.setAmount(toAmount);

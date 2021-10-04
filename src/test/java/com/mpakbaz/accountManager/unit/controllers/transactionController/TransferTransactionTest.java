@@ -25,6 +25,7 @@ import java.util.UUID;
 
 import com.mpakbaz.accountManager.Services.TransactionService;
 import com.mpakbaz.accountManager.http.controllers.TransactionController;
+import com.mpakbaz.accountManager.infrastructure.database.models.Account;
 import com.mpakbaz.accountManager.infrastructure.database.models.Transaction;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -65,7 +66,7 @@ public class TransferTransactionTest {
             throws Exception {
 
         Transaction transaction = new Transaction();
-        transaction.setAccountId(UUID.randomUUID());
+        transaction.setAccount(new Account());
         transaction.setAmount(BigDecimal.valueOf(10));
         transaction.setCreatedAt(new Date(System.currentTimeMillis()));
 
@@ -78,7 +79,7 @@ public class TransferTransactionTest {
                                 UUID.randomUUID().toString(), UUID.randomUUID().toString(), 10)))
                 .andDo(print()).andExpect(status().isOk()).andExpect(jsonPath("id", is(transaction.getId().toString())))
                 .andExpect(jsonPath("type", is(transaction.getType())))
-                .andExpect(jsonPath("accountId", is(transaction.getAccountId().toString())));
+                .andExpect(jsonPath("accountId", is(transaction.getAccount().getId().toString())));
 
     }
 }

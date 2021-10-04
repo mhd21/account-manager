@@ -16,7 +16,7 @@ public class AccountPayload {
     public AccountPayload(com.mpakbaz.accountManager.infrastructure.database.models.Account account) {
         this.id = account.getId();
         this.currency = account.getCurrency();
-        this.customerId = account.getCustomerId();
+        this.customerId = account.getCustomer().getId();
         this.balance = account.getBalance();
     }
 

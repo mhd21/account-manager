@@ -9,6 +9,8 @@ import javax.persistence.EntityNotFoundException;
 import javax.validation.ConstraintViolationException;
 
 import com.mpakbaz.accountManager.exceptions.AccountBalanceException;
+import com.mpakbaz.accountManager.exceptions.AccountNotFoundException;
+import com.mpakbaz.accountManager.exceptions.CustomerNotFoundException;
 import com.mpakbaz.accountManager.http.exceptions.helpers.ApiError;
 import com.mpakbaz.accountManager.http.exceptions.helpers.ResponseEntityBuilder;
 
@@ -110,6 +112,28 @@ public class GlobalExceptionHandlerController extends ResponseEntityExceptionHan
         details.add(ex.getMessage());
 
         ApiError err = new ApiError(LocalDateTime.now(), HttpStatus.NOT_FOUND, ex.getMessage(), details);
+
+        return ResponseEntityBuilder.build(err);
+    }
+
+    @ExceptionHandler(AccountNotFoundException.class)
+    public ResponseEntity<Object> handleAccountBalanceException(AccountNotFoundException ex) {
+
+        List<String> details = new ArrayList<String>();
+        details.add(ex.getMessage());
+
+        ApiError err = new ApiError(LocalDateTime.now(), HttpStatus.BAD_REQUEST, ex.getMessage(), details);
+
+        return ResponseEntityBuilder.build(err);
+    }
+
+    @ExceptionHandler(CustomerNotFoundException.class)
+    public ResponseEntity<Object> handleAccountBalanceException(CustomerNotFoundException ex) {
+
+        List<String> details = new ArrayList<String>();
+        details.add(ex.getMessage());
+
+        ApiError err = new ApiError(LocalDateTime.now(), HttpStatus.BAD_REQUEST, ex.getMessage(), details);
 
         return ResponseEntityBuilder.build(err);
     }

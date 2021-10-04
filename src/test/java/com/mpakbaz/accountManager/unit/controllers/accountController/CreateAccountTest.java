@@ -20,6 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 import com.mpakbaz.accountManager.Services.AccountService;
 import com.mpakbaz.accountManager.constants.Currencies;
@@ -67,10 +68,11 @@ public class CreateAccountTest {
                 Customer customer = new Customer();
 
                 Account account = new Account();
-                account.setCustomerId(customer.getId());
+                account.setCustomer(customer);
                 account.setCurrency(Currencies.USD);
 
-                when(accountService.createAccount(isA(Account.class), isA(BigDecimal.class))).thenReturn(account);
+                when(accountService.createAccount(isA(UUID.class), isA(Account.class), isA(BigDecimal.class)))
+                                .thenReturn(account);
 
                 this.mockMvc.perform(post("/account/create").contentType(APPLICATION_JSON)
                                 .content(String.format("{\"customerId\":\"%s\",\"currency\": \"%s\"}",
@@ -89,10 +91,11 @@ public class CreateAccountTest {
                 Customer customer = new Customer();
 
                 Account account = new Account();
-                account.setCustomerId(customer.getId());
+                account.setCustomer(customer);
                 account.setCurrency(Currencies.USD);
 
-                when(accountService.createAccount(isA(Account.class), isA(BigDecimal.class))).thenReturn(account);
+                when(accountService.createAccount(isA(UUID.class), isA(Account.class), isA(BigDecimal.class)))
+                                .thenReturn(account);
 
                 this.mockMvc.perform(post("/account/create").contentType(APPLICATION_JSON)
                                 .content(String.format("{\"currency\": \"%s\"}", Currencies.USD))).andDo(print())
@@ -106,10 +109,11 @@ public class CreateAccountTest {
                 Customer customer = new Customer();
 
                 Account account = new Account();
-                account.setCustomerId(customer.getId());
+                account.setCustomer(customer);
                 account.setCurrency(Currencies.USD);
 
-                when(accountService.createAccount(isA(Account.class), isA(BigDecimal.class))).thenReturn(account);
+                when(accountService.createAccount(isA(UUID.class), isA(Account.class), isA(BigDecimal.class)))
+                                .thenReturn(account);
 
                 this.mockMvc.perform(
                                 post("/account/create").contentType(APPLICATION_JSON)

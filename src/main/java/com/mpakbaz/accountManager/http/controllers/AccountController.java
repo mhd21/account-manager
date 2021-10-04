@@ -14,6 +14,8 @@ import java.util.UUID;
 import javax.validation.Valid;
 
 import com.mpakbaz.accountManager.Services.AccountService;
+import com.mpakbaz.accountManager.exceptions.AccountNotFoundException;
+import com.mpakbaz.accountManager.exceptions.CustomerNotFoundException;
 import com.mpakbaz.accountManager.http.inputs.CreateAccountInput;
 import com.mpakbaz.accountManager.http.payloads.AccountPayload;
 import com.mpakbaz.accountManager.infrastructure.database.models.Account;
@@ -31,12 +33,13 @@ public class AccountController {
     private AccountService accountService;
 
     @PostMapping(path = "/create")
-    public AccountPayload createAccount(@Valid @RequestBody CreateAccountInput input) {
+    public AccountPayload createAccount(@Valid @RequestBody CreateAccountInput input)
+            throws CustomerNotFoundException, AccountNotFoundException {
         Account account = new Account();
-        account.setCustomerId(input.getCustomerId());
         account.setCurrency(input.getCurrency());
 
-        Account createdAccount = accountService.createAccount(account, input.getOpenningBalance());
+        Account createdAccount = accountService.createAccount(input.getCustomerId(), account,
+                input.getOpenningBalance());
 
         return new AccountPayload(createdAccount);
     }

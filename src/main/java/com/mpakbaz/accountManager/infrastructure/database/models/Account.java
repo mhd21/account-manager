@@ -2,40 +2,46 @@ package com.mpakbaz.accountManager.infrastructure.database.models;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import java.math.BigDecimal;
-import java.util.UUID;
-import org.hibernate.annotations.Type;
-import org.springframework.data.annotation.ReadOnlyProperty;
+
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Table(name = "accounts")
 public class Account extends EntityWithUUID {
 
-    @Type(type = "pg-uuid")
-    private UUID customerId;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "customer_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Customer customer;
 
     @Column(name = "currency")
     private String currency;
 
-    @ReadOnlyProperty
+    @Transient
     private BigDecimal balance;
 
     public Account() {
         super();
     }
 
-    public UUID getCustomerId() {
-        return customerId;
+    public Customer getCustomer() {
+        return customer;
     }
 
     public String getCurrency() {
         return currency;
     }
 
-    public void setCustomerId(UUID customerId) {
-        this.customerId = customerId;
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
 
     public void setCurrency(String currency) {

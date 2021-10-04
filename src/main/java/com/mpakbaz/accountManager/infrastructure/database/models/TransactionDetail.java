@@ -1,14 +1,19 @@
 package com.mpakbaz.accountManager.infrastructure.database.models;
 
 import java.math.BigDecimal;
-import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Table(name = "transaction_details")
@@ -18,11 +23,15 @@ public class TransactionDetail {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
-    @Column(name = "transaction_id")
-    private UUID transactionId;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "transaction_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Transaction transaction;
 
-    @Column(name = "account_id")
-    private UUID accountId;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "account_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Account account;
 
     @Column(name = "amount", columnDefinition = "decimal(12,2)")
     private BigDecimal amount;
@@ -35,20 +44,20 @@ public class TransactionDetail {
         this.id = id;
     }
 
-    public UUID getAccountId() {
-        return accountId;
+    public Account getAccount() {
+        return account;
     }
 
-    public void setAccountId(UUID accountId) {
-        this.accountId = accountId;
+    public void setAccount(Account account) {
+        this.account = account;
     }
 
-    public UUID getTransactionId() {
-        return transactionId;
+    public Transaction getTransaction() {
+        return transaction;
     }
 
-    public void setTransactionId(UUID transactionId) {
-        this.transactionId = transactionId;
+    public void setTransaction(Transaction transaction) {
+        this.transaction = transaction;
     }
 
     public BigDecimal getAmount() {

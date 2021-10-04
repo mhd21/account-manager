@@ -4,6 +4,7 @@ import javax.validation.Valid;
 
 import com.mpakbaz.accountManager.Services.TransactionService;
 import com.mpakbaz.accountManager.exceptions.AccountBalanceException;
+import com.mpakbaz.accountManager.exceptions.AccountNotFoundException;
 import com.mpakbaz.accountManager.http.inputs.TransferInput;
 import com.mpakbaz.accountManager.http.payloads.TransactionPayload;
 import com.mpakbaz.accountManager.infrastructure.database.models.Transaction;
@@ -26,7 +27,8 @@ public class TransactionController {
     private TransactionService transactionService;
 
     @PostMapping(path = "/transfer")
-    public TransactionPayload transfer(@Valid @RequestBody TransferInput input) throws AccountBalanceException {
+    public TransactionPayload transfer(@Valid @RequestBody TransferInput input)
+            throws AccountBalanceException, AccountNotFoundException {
         Transaction transaction;
 
         transaction = transactionService.transferTransaction(input.getFromAccountId(), input.getToAccountId(),
